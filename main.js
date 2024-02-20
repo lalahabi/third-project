@@ -4,9 +4,9 @@ const getLatestNews = async () =>{
     const url = new URL(`https://jellytimes.netlify.app/top-headlines?country=kr`
     );
     const response = await fetch(url);
-    const data = response.json();
+    const data = await response.json();
     news = data.articles;
-    console.log("rrrr", response);
+    console.log("뉴스", response);
 };
 
 getLatestNews();
