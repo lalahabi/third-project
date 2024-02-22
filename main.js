@@ -4,43 +4,56 @@ let newsList = [];
 const menus = document.querySelectorAll(".menus button")
 menus.forEach(menu=>menu.addEventListener("click",(event)=>getNewsByCategory(event)))
 
+// let url= new URL(`https://newsapi.org/v2/top-headlines?country=us&apiKey=${API_KEY}`)
+let url= new URL(`https://jellytimes.netlify.app/top-headlines`)
+
+const getNews = async() => {
+    try {
+        const response = await fetch(url);
+
+        const data = await response.json();
+        if(response.status===200){
+            if(data.articles.length===0){
+                throw new Error("No result for this search");
+            }
+            newsList = data.articles;
+            render();  
+        }else{
+            throw new Error(data.message)
+        }
+    }catch(error){
+        errorRender(error.message)
+
+    };
+
+}
+
 const getLatestNews = async() => {
-    const url = new URL (
-      //`https://newsapi.org/v2/top-headlines?country=us&apiKey=${API_KEY}`
-        `https://jellytimes.netlify.app/top-headlines`
+    url = new URL (
+       // `https://newsapi.org/v2/top-headlines?country=us&apiKey=${API_KEY}`
+       `https://jellytimes.netlify.app/top-headlines`
     );
-    const response = await fetch(url);
-    const data = await response.json();
-    newsList = data.articles;
-    render();
-    console.log("uuu",newsList)
+
+    getNews()
 };
 
 const getNewsByCategory= async (event)=>{
     const category=event.target.textContent.toLowerCase();
     console.log("category", category);
     // const url = new URL(`https://newsapi.org/v2/top-headlines?country=us&category=${category}&apiKey=${API_KEY}`
-    const url = new URL(`https://jellytimes.netlify.app/top-headlines?category=${category}`
+    url = new URL(`https://jellytimes.netlify.app/top-headlines?category=${category}`
     );
-    const response = await fetch(url)
-    const data = await response.json()
-    console.log("Ddd", data)
-    newsList = data.articles;
 
-    render()
+    getNews()
 };
 
-const getNewsByKeyword=async()=>{
+const getNewsByKeyword= async ()=>{
     const keyword = document.getElementById("search-input").value
-    console.log("keyword", keyword)
-    const url = new URL(`https://jellytimes.netlify.app/top-headlines?q=${keyword}`
+    
+    url = new URL(`https://jellytimes.netlify.app/top-headlines?q=${keyword}`
     );
 
-    const response = await fetch(url)
-    const data = await response.json()
-    console.log("keyword data", data);
-    newsList = data.articles;
-    render()
+    getNews()
 }
 
 const render=()=>{
@@ -79,8 +92,32 @@ const render=()=>{
     ).join('');
     console.log("html", newsHTML)
 
-    document.getElementById('news-board').innerHTML=newsHTML;
+    document.getElementById("news-board").innerHTML=newsHTML;
 
 }
+
+const errorRender =(errorMessage) => {
+    const errorHTML =  `<div class="alert alert-danger" role="alert">
+    ${errorMessage}
+        </div>`;
+    document.getElementById("news-board").innerHTML=errorHTML
+}
+
+const openNav = () => {
+    document.getElementById("mySidenav").style.width = "250px";
+  };
+  
+  const closeNav = () => {
+    document.getElementById("mySidenav").style.width = "0";
+  };
+
+  const openSearchBox = () => {
+    let inputArea = document.getElementById("input-area");
+    if (inputArea.style.display === "inline") {
+      inputArea.style.display = "none";
+    } else {
+      inputArea.style.display = "inline";
+    }
+  };
 
 getLatestNews();
