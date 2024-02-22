@@ -22,7 +22,7 @@
 }
 
 .menus button:hover{
-    background-color: beige;
+    background-color: pink;
 }
 
 .news-img-size{
@@ -42,7 +42,7 @@
     z-index: 1;
     top: 0;
     left: 0;
-    background-color: burlywood;
+    background-color: lightblue;
     overflow-x: hidden;
     transition: 0.5s;
     padding-top: 60px;
@@ -71,6 +71,6 @@
   }
   
   .side-menu-list button:hover {
-    background-color: beige;
+    background-color: pink;
     border-radius: 3px;
   }
