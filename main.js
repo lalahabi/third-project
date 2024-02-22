@@ -1,10 +1,12 @@
 
-//const API_KEY = `e069d8ca7aec4b55b3b8477a11e2ee2f`
+// const API_KEY = `e069d8ca7aec4b55b3b8477a11e2ee2f`
 let newsList = [];
+const menus = document.querySelectorAll(".menus button")
+menus.forEach(menu=>menu.addEventListener("click",(event)=>getNewsByCategory(event)))
 
 const getLatestNews = async() => {
     const url = new URL (
-        //`https://newsapi.org/v2/top-headlines?country=us&apiKey=${API_KEY}`
+      //`https://newsapi.org/v2/top-headlines?country=us&apiKey=${API_KEY}`
         `https://jellytimes.netlify.app/top-headlines`
     );
     const response = await fetch(url);
@@ -14,6 +16,33 @@ const getLatestNews = async() => {
     console.log("uuu",newsList)
 };
 
+const getNewsByCategory= async (event)=>{
+    const category=event.target.textContent.toLowerCase();
+    console.log("category", category);
+    // const url = new URL(`https://newsapi.org/v2/top-headlines?country=us&category=${category}&apiKey=${API_KEY}`
+    const url = new URL(`https://jellytimes.netlify.app/top-headlines?category=${category}`
+    );
+    const response = await fetch(url)
+    const data = await response.json()
+    console.log("Ddd", data)
+    newsList = data.articles;
+
+    render()
+};
+
+const getNewsByKeyword=async()=>{
+    const keyword = document.getElementById("search-input").value
+    console.log("keyword", keyword)
+    const url = new URL(`https://jellytimes.netlify.app/top-headlines?q=${keyword}`
+    );
+
+    const response = await fetch(url)
+    const data = await response.json()
+    console.log("keyword data", data);
+    newsList = data.articles;
+    render()
+}
+
 const render=()=>{
     const newsHTML = newsList.map(
         (news)=>`<div class="row news">
@@ -22,7 +51,7 @@ const render=()=>{
     src="${
         news.urlToImage ||
       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRqEWgS0uxxEYJ0PsOb2OgwyWvC0Gjp8NUdPw&usqp=CAU"
-}" />
+}"/> 
 </div>
 <div class="col-lg-8">
     <h2>
